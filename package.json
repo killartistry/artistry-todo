@@ -1,0 +1,17 @@
+{
+  "name": "indecision-app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "angel ro",
+  "license": "ISC",
+  "scripts": {
+    "build": "babel src/app.js --out-file=public/scripts/app.js --presets=@babel/preset-env,@babel/preset-react",
+    "watch": "babel src/app.js --out-file=public/scripts/app.js --presets=@babel/preset-env,@babel/preset-react --watch"
+  },
+  "dependencies": {
+    "@babel/cli": "^7.28.6",
+    "@babel/core": "^7.29.0",
+    "@babel/preset-env": "^7.29.2",
+    "@babel/preset-react": "^7.28.5"
+  }
+}
