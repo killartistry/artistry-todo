@@ -12,6 +12,7 @@ var currentUser = null;
 var tasks = [];
 var activeTab = 'walks';
 var isLoading = true;
+var errorMsg = null;
 
 // ── Category config ──
 var categories = {
@@ -49,8 +50,10 @@ function fetchTasks() {
     .then(function(result) {
       if (result.error) {
         console.error('Error fetching tasks:', result.error);
+        errorMsg = 'Error loading tasks: ' + result.error.message;
         tasks = [];
       } else {
+        errorMsg = null;
         tasks = result.data || [];
       }
       isLoading = false;
@@ -72,7 +75,10 @@ function addTask(e) {
     .then(function(result) {
       if (result.error) {
         console.error('Error adding task:', result.error);
+        errorMsg = 'Error adding task: ' + result.error.message;
+        renderApp();
       } else if (result.data) {
+        errorMsg = null;
         tasks = tasks.concat(result.data);
         renderApp();
       }
@@ -201,6 +207,7 @@ function renderApp() {
         <input type="text" id="taskInput" placeholder={categories[activeTab].placeholder} />
         <button type="submit">+ add</button>
       </form>
+      {errorMsg ? <p style={{ color: 'red', textAlign: 'center', fontSize: '13px' }}>{errorMsg}</p> : null}
       {isLoading ? <div className="loading">loading...</div> : content}
       {summary}
     </div>
