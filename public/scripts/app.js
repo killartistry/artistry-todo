@@ -4,7 +4,7 @@ console.log('Artistry To-Do app is running');
 // IMPORTANT: Replace YOUR_ANON_KEY_HERE with your Supabase anon/public key
 // Find it at: Supabase Dashboard → Settings → API → Project API keys
 var SUPABASE_URL = 'https://sopuxhemeqqhibrqvvba.supabase.co';
-var SUPABASE_KEY = 'YOUR_ANON_KEY_HERE';
+var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvcHV4aGVtZXFxaGlicnF2dmJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1NDE4MzcsImV4cCI6MjA5MDExNzgzN30.GGzrWWT6Q8_xyocbiZizvTxw-ZpFsBQy7luZviRN9Mw';
 var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // ── App state ──
