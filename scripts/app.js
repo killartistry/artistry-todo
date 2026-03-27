@@ -13,6 +13,8 @@ var tasks = [];
 var activeTab = 'walks';
 var isLoading = true;
 var errorMsg = null;
+var editingTaskId = null;
+var editingText = '';
 
 // ── Category config ──
 var categories = {
@@ -101,6 +103,38 @@ function toggleTask(taskId, currentDone) {
     });
 }
 
+function startEditing(taskId, currentText) {
+  editingTaskId = taskId;
+  editingText = currentText;
+  renderApp();
+}
+
+function cancelEditing() {
+  editingTaskId = null;
+  editingText = '';
+  renderApp();
+}
+
+function saveEdit(taskId) {
+  var newText = editingText.trim();
+  if (!newText) return;
+  supabase
+    .from('tasks')
+    .update({ text: newText })
+    .eq('id', taskId)
+    .then(function(result) {
+      if (!result.error) {
+        tasks = tasks.map(function(t) {
+          if (t.id === taskId) return Object.assign({}, t, { text: newText });
+          return t;
+        });
+      }
+      editingTaskId = null;
+      editingText = '';
+      renderApp();
+    });
+}
+
 function deleteTask(taskId) {
   supabase
     .from('tasks')
@@ -150,6 +184,30 @@ function renderApp() {
   var pendingTasks = totalTasks - doneTasks;
 
   var taskList = filteredTasks.map(function(task) {
+    var isEditing = editingTaskId === task.id;
+
+    if (isEditing) {
+      return (
+        <div key={task.id} className="task editing">
+          <input
+            type="text"
+            className="edit-input"
+            value={editingText}
+            onChange={function(e) { editingText = e.target.value; renderApp(); }}
+            onKeyDown={function(e) {
+              if (e.key === 'Enter') saveEdit(task.id);
+              if (e.key === 'Escape') cancelEditing();
+            }}
+            autoFocus
+          />
+          <div className="edit-actions">
+            <button className="save-btn" onClick={function() { saveEdit(task.id); }}>save</button>
+            <button className="cancel-btn" onClick={cancelEditing}>cancel</button>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div key={task.id} className={task.done ? 'task done' : 'task'}>
         <div className="task-left">
@@ -160,9 +218,14 @@ function renderApp() {
           />
           <span>{task.text}</span>
         </div>
-        <button className="delete-btn" onClick={function() { deleteTask(task.id); }}>
-          delete
-        </button>
+        <div className="task-actions">
+          <button className="edit-btn" onClick={function() { startEditing(task.id, task.text); }}>
+            edit
+          </button>
+          <button className="delete-btn" onClick={function() { deleteTask(task.id); }}>
+            delete
+          </button>
+        </div>
       </div>
     );
   });
