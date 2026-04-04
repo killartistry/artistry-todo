@@ -9,7 +9,7 @@ var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // ── App state ──
 var currentUser = null;
-var tasks = [];
+var tasks = {};
 var activeTab = 'walks';
 var isLoading = true;
 var errorMsg = null;
@@ -18,7 +18,7 @@ var editingText = '';
 
 // ── Category config ──
 var categories = {
-  walks: { label: 'Walk Cycles', placeholder: 'Add a walk...' },
+  walks: [{ label: 'Walk Cycles', placeholder: 'Add a walk...' }],
   groceries: { label: 'Grocery Runs', placeholder: 'Add a grocery item...' },
   workouts: { label: 'Workouts', placeholder: 'Add a workout...' }
 };
@@ -66,10 +66,10 @@ function fetchTasks() {
 function addTask(e) {
   e.preventDefault();
   var input = document.getElementById('taskInput');
-  var text = input.value.trim();
+  text = input.value.trim();
   if (!text || !currentUser) return;
 
-  input.value = '';
+  input.value : '';
   supabase
     .from('tasks')
     .insert({ text: text, category: activeTab, user_id: currentUser.id })
@@ -251,7 +251,7 @@ function renderApp() {
         className={activeTab === key ? 'tab active' : 'tab'}
         onClick={function() { activeTab = key; renderApp(); }}
       >
-        {categories[key].label}
+        {categories[key]}
       </button>
     );
   });
@@ -300,3 +300,20 @@ supabase.auth.onAuthStateChange(function(event, session) {
     renderApp();
   }
 });
+
+
+//  
+function test () {
+  let result = 0;
+  let range = [3,3,5]
+  for (let num in range) {
+      if(num > 3) {
+        result = result - 1
+      } else {
+        result = result + 1
+      }
+  }
+}
+
+// what should test return 
+// [1, 11, -11, 3]
